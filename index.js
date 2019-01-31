@@ -72,6 +72,7 @@ webserver.post('/api/send-sms', (req, res) => {
 });
 
 webserver.post('/api/receive-sms', (req, res) => {
+	console.log(req.body);
 	const twiml = new MessagingResponse();
 
 	twiml.message('The Robots are coming! Head for the hills!');
