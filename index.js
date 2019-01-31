@@ -124,22 +124,17 @@ massive(
 		let bodyText = Body.toLowerCase();
 		let fromNumber = From.replace(/\+/g, '').trim();
 		const response = getResponse(bodyText);
-		console.log(fromNumber);
 
 		if (bodyText === 'no' || bodyText === 'yes') {
 			dbInstance.get_contact([ fromNumber.replace(/\+/g, '') ]).then((contacts) => {
 				let contactName = '';
-
-				console.log(contacts);
 
 				if (contacts.length) {
 					const contact = contacts[0];
 					contactName = contact.name;
 				}
 
-				console.log('index name: ', contactName);
-
-				const subject = getSubject(bodyText);
+				const subject = getSubject(bodyText, contactName);
 				const msg = getStaffNotification(bodyText, fromNumber, contactName);
 				const html = msg;
 
