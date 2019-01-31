@@ -9,6 +9,9 @@ const authToken = 'e642e5d29c7fef672b969bb27ecd215f';
 const client = require('twilio')(accountSid, authToken);
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
+const { getInitialMessage, getResponse, getStaffNotification } = require('./messages.js');
+const { sendEmail } = require('emailer.js');
+
 webserver.use((req, res, next) => {
 	try {
 		res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
@@ -38,32 +41,29 @@ webserver.use(
 
 webserver.post('/api/send-sms', (req, res) => {
 	try {
-		let { to, msg } = req.body;
+		let { to, name, date, time } = req.body;
 
 		if (to) {
-			if (msg) {
-				if (typeof to === 'number') {
-					to = to.toString();
-				}
-
-				to = `+${to}`;
-
-				to = to.replace(/[^0-9]/g, '');
-
-				console.log(to, msg);
-				client.messages
-					.create({
-						body: msg,
-						from: '+13852472023',
-						to: to
-					})
-					.then((message) => res.status(200).send(message))
-					.done();
-			} else {
-				res.status(400).send("'msg' param is required");
+			if (typeof to === 'number') {
+				to = to.toString();
 			}
+
+			to = `+${to}`;
+			to = to.replace(/[^0-9]/g, '');
+
+			const msg = getInitialMessage(name, date, time);
+
+			console.log(to, msg);
+			client.messages
+				.create({
+					body: msg,
+					from: '+13852472023',
+					to: to
+				})
+				.then((message) => res.status(200).send(message))
+				.done();
 		} else {
-			res.status(400).send("'to' param is required");
+			res.status(400).send('missing param');
 		}
 	} catch (err) {
 		console.log(err);
@@ -72,10 +72,41 @@ webserver.post('/api/send-sms', (req, res) => {
 });
 
 webserver.post('/api/receive-sms', (req, res) => {
-	console.log(req.body);
+	const {
+		ToCountry,
+		ToState,
+		SmSMessageSid,
+		NumMedia,
+		ToCity,
+		FromZip,
+		SmsSid,
+		FromState,
+		SmsStatus,
+		FromCity,
+		Body,
+		FromCountry,
+		To,
+		ToZip,
+		NumSegments,
+		MessageSid,
+		AccountSid,
+		From,
+		ApiVersion
+	} = req.body;
+	let bodyText = Body.toLowerCase();
+	let fromNumber = From;
+	const response = getResponse(BodyText);
+
+	if (bodyText === 'no' || bodyText === 'yes') {
+		const subject = getSubject(bodyText);
+		const msg = getStaffNotification(bodyText);
+		const html = msg;
+		sendEmail(subject, msg, html);
+	}
+
 	const twiml = new MessagingResponse();
 
-	twiml.message('The Robots are coming! Head for the hills!');
+	twiml.message(response);
 
 	res.writeHead(200, { 'Content-Type': 'text/xml' });
 	res.end(twiml.toString());
