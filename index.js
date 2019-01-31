@@ -57,8 +57,12 @@ massive(
 					to = to.toString().trim();
 				}
 
-				to = `+${to}`;
 				to = to.replace(/[^0-9]/g, '');
+				if (to.length < 11) {
+					to = '1' + to;
+				} else {
+					to = `+${to}`;
+				}
 
 				const msg = getInitialMessage(name, date, time);
 
