@@ -12,6 +12,9 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const { getInitialMessage, getResponse, getStaffNotification } = require('./messages.js');
 const { sendEmail, getSubject } = require('./emailer/emailer.js');
 
+// const staffNumbers = [ '18018915076', '8015569549' ];
+const staffNumbers = [ '18019415824' ];
+
 const massive = require('massive');
 massive(
 	'postgres://zlrbkyykudygdx:15bab7552e3a5bb51f456c455c8609050ff45d85670f04fb115a6f0512c7cb96@ec2-54-83-50-174.compute-1.amazonaws.com:5432/d3qeagqbti2bte?ssl=true'
@@ -139,6 +142,17 @@ massive(
 				const html = msg;
 
 				sendEmail(subject, msg, html);
+
+				staffNumbers.forEach((n) => {
+					client.messages
+						.create({
+							body: msg,
+							from: '+13852472023',
+							to: n
+						})
+						.then((message) => console.log('notified ' + n))
+						.done();
+				});
 			});
 		}
 
