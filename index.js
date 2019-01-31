@@ -123,7 +123,7 @@ massive(
 		console.log(fromNumber);
 
 		if (bodyText === 'no' || bodyText === 'yes') {
-			dbInstance.get_contact([ fromNumber ]).then((contacts) => {
+			dbInstance.get_contact([ fromNumber.replace('+', '') ]).then((contacts) => {
 				let contactName = '';
 				if (contacts.length) {
 					const contact = contacts[0];
