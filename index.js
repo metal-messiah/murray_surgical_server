@@ -95,11 +95,11 @@ webserver.post('/api/receive-sms', (req, res) => {
 	} = req.body;
 	let bodyText = Body.toLowerCase();
 	let fromNumber = From;
-	const response = getResponse(BodyText);
+	const response = getResponse(bodyText);
 
 	if (bodyText === 'no' || bodyText === 'yes') {
 		const subject = getSubject(bodyText);
-		const msg = getStaffNotification(bodyText);
+		const msg = getStaffNotification(bodyText, fromNumber);
 		const html = msg;
 		sendEmail(subject, msg, html);
 	}
