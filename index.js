@@ -7,6 +7,7 @@ const bodyParser = require('body-parser');
 const accountSid = 'AC564fb9d03a6a8f27b93504d3c4a402f2';
 const authToken = 'e642e5d29c7fef672b969bb27ecd215f';
 const client = require('twilio')(accountSid, authToken);
+const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 webserver.use((req, res, next) => {
 	try {
@@ -68,6 +69,15 @@ webserver.post('/api/send-sms', (req, res) => {
 		console.log(err);
 		res.status(500).send(err);
 	}
+});
+
+webserver.post('/api/receive-sms', (req, res) => {
+	const twiml = new MessagingResponse();
+
+	twiml.message('The Robots are coming! Head for the hills!');
+
+	res.writeHead(200, { 'Content-Type': 'text/xml' });
+	res.end(twiml.toString());
 });
 
 http.listen(port, function() {
