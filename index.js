@@ -15,6 +15,8 @@ const { sendEmail, getSubject } = require('./emailer/emailer.js');
 // const staffNumbers = [ '18018915076', '8015569549' ];
 const staffNumbers = [ '18019415824' ];
 
+const postAuthKey = 'Murray$urgical2019';
+
 const massive = require('massive');
 massive(
 	'postgres://zlrbkyykudygdx:15bab7552e3a5bb51f456c455c8609050ff45d85670f04fb115a6f0512c7cb96@ec2-54-83-50-174.compute-1.amazonaws.com:5432/d3qeagqbti2bte?ssl=true'
@@ -53,48 +55,51 @@ massive(
 
 	webserver.post('/api/send-sms', (req, res) => {
 		try {
-			let { to, name, date, time } = req.body;
-
-			if (to) {
-				if (typeof to === 'number') {
-					to = to.toString().trim();
-				}
-
-				to = to.replace(/[^0-9]/g, '');
-				if (to.length < 11) {
-					to = '1' + to;
-				} else {
-					to = `+${to}`;
-				}
-
-				const msg = getInitialMessage(name, date, time);
-
-				// tempContacts[to] = { name, date, time };
-
-				dbInstance.get_contact([ to.replace(/\+/g, '') ]).then((contacts) => {
-					if (contacts.length) {
-						// contact already exists
-						dbInstance.update_contact([ name, to.replace(/\+/g, ''), date, time ]).then(() => {
-							console.log(`updated contact --> ${to} ${name}`);
-						});
-					} else {
-						// contact doesnt exist, add it
-						dbInstance.add_contact([ name, to.replace(/\+/g, ''), date, time ]).then(() => {
-							console.log(`added new contact --> ${to} ${name}`);
-						});
+			let { to, name, date, time, authKey } = req.body;
+			if (authKey === postAuthKey) {
+				if (to) {
+					if (typeof to === 'number') {
+						to = to.toString().trim();
 					}
-				});
 
-				client.messages
-					.create({
-						body: msg,
-						from: '+13852472023',
-						to: to
-					})
-					.then((message) => res.status(200).send(message))
-					.done();
+					to = to.replace(/[^0-9]/g, '');
+					if (to.length < 11) {
+						to = '1' + to;
+					} else {
+						to = `+${to}`;
+					}
+
+					const msg = getInitialMessage(name, date, time);
+
+					// tempContacts[to] = { name, date, time };
+
+					dbInstance.get_contact([ to.replace(/\+/g, '') ]).then((contacts) => {
+						if (contacts.length) {
+							// contact already exists
+							dbInstance.update_contact([ name, to.replace(/\+/g, ''), date, time ]).then(() => {
+								console.log(`updated contact --> ${to} ${name}`);
+							});
+						} else {
+							// contact doesnt exist, add it
+							dbInstance.add_contact([ name, to.replace(/\+/g, ''), date, time ]).then(() => {
+								console.log(`added new contact --> ${to} ${name}`);
+							});
+						}
+					});
+
+					client.messages
+						.create({
+							body: msg,
+							from: '+13852472023',
+							to: to
+						})
+						.then((message) => res.status(200).send(message))
+						.done();
+				} else {
+					res.status(400).send('missing param');
+				}
 			} else {
-				res.status(400).send('missing param');
+				res.status(403).send('Invalid Key');
 			}
 		} catch (err) {
 			console.log(err);
