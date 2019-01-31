@@ -126,8 +126,11 @@ massive(
 				let contactName = '';
 				if (contacts.length) {
 					const contact = contacts[0];
+					console.log(contacts);
 					contactName = contact.name;
 				}
+
+				console.log('index name: ', contactName);
 
 				const subject = getSubject(bodyText);
 				const msg = getStaffNotification(bodyText, fromNumber, contactName);

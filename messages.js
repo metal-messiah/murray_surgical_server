@@ -19,6 +19,8 @@ const getResponse = (response) => {
 
 // Message To Be Sent To Staff When The Client Responds (Via Text And Email)
 const getStaffNotification = (response, phone, name) => {
+	console.log('name: ', name);
+
 	response = response.toLowerCase();
 	if (response === 'yes') {
 		return `${name ? name + ' (' : ''}${phone}${name ? ')' : ''} has confirmed their appointment.`;
