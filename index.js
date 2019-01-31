@@ -10,7 +10,7 @@ const client = require('twilio')(accountSid, authToken);
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
 const { getInitialMessage, getResponse, getStaffNotification } = require('./messages.js');
-const { sendEmail } = require('emailer.js');
+const { sendEmail } = require('./emailer/emailer.js');
 
 webserver.use((req, res, next) => {
 	try {
