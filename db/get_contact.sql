@@ -1,1 +1,1 @@
-select * from contacts where name = $1;
+select * from contacts where phone = $1;

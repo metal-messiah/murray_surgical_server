@@ -67,12 +67,12 @@ massive(
 				dbInstance.get_contact([ to ]).then((contacts) => {
 					if (contacts.length) {
 						// contact already exists
-						dbInstance.update_contact([ to, name, date, time ]).then(() => {
+						dbInstance.update_contact([ name, to, date, time ]).then(() => {
 							console.log(`updated contact --> ${to} ${name}`);
 						});
 					} else {
 						// contact doesnt exist, add it
-						dbInstance.add_contact([ to, name, date, time ]).then(() => {
+						dbInstance.add_contact([ name, to, date, time ]).then(() => {
 							console.log(`added new contact --> ${to} ${name}`);
 						});
 					}
