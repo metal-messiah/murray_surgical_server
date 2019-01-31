@@ -54,7 +54,7 @@ massive(
 
 			if (to) {
 				if (typeof to === 'number') {
-					to = to.toString();
+					to = to.toString().trim();
 				}
 
 				to = `+${to}`;
@@ -118,16 +118,18 @@ massive(
 			ApiVersion
 		} = req.body;
 		let bodyText = Body.toLowerCase();
-		let fromNumber = From;
+		let fromNumber = From.replace(/\+/g, '').trim();
 		const response = getResponse(bodyText);
 		console.log(fromNumber);
 
 		if (bodyText === 'no' || bodyText === 'yes') {
 			dbInstance.get_contact([ fromNumber.replace(/\+/g, '') ]).then((contacts) => {
 				let contactName = '';
+
+				console.log(contacts);
+
 				if (contacts.length) {
 					const contact = contacts[0];
-					console.log(contacts);
 					contactName = contact.name;
 				}
 
