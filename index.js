@@ -64,15 +64,15 @@ massive(
 
 				// tempContacts[to] = { name, date, time };
 
-				dbInstance.get_contact([ to ]).then((contacts) => {
+				dbInstance.get_contact([ to.replace(/+/g, '') ]).then((contacts) => {
 					if (contacts.length) {
 						// contact already exists
-						dbInstance.update_contact([ name, to, date, time ]).then(() => {
+						dbInstance.update_contact([ name, to.replace(/+/g, ''), date, time ]).then(() => {
 							console.log(`updated contact --> ${to} ${name}`);
 						});
 					} else {
 						// contact doesnt exist, add it
-						dbInstance.add_contact([ name, to, date, time ]).then(() => {
+						dbInstance.add_contact([ name, to.replace(/+/g, ''), date, time ]).then(() => {
 							console.log(`added new contact --> ${to} ${name}`);
 						});
 					}
@@ -123,7 +123,7 @@ massive(
 		console.log(fromNumber);
 
 		if (bodyText === 'no' || bodyText === 'yes') {
-			dbInstance.get_contact([ fromNumber.replace('+', '') ]).then((contacts) => {
+			dbInstance.get_contact([ fromNumber.replace(/+/g, '') ]).then((contacts) => {
 				let contactName = '';
 				if (contacts.length) {
 					const contact = contacts[0];
