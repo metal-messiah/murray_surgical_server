@@ -120,6 +120,7 @@ massive(
 		let bodyText = Body.toLowerCase();
 		let fromNumber = From;
 		const response = getResponse(bodyText);
+		console.log(fromNumber);
 
 		if (bodyText === 'no' || bodyText === 'yes') {
 			dbInstance.get_contact([ fromNumber ]).then((contacts) => {
