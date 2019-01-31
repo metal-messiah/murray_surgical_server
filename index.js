@@ -130,7 +130,7 @@ massive(
 				}
 
 				const subject = getSubject(bodyText);
-				const msg = getStaffNotification(bodyText, fromNumber, name);
+				const msg = getStaffNotification(bodyText, fromNumber, contactName);
 				const html = msg;
 
 				sendEmail(subject, msg, html);
