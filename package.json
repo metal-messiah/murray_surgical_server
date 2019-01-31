@@ -1,0 +1,16 @@
+{
+	"name": "Murray_Surgical_Server",
+	"version": "1.0.0",
+	"description": "twilio rest server",
+	"main": "index.js",
+	"license": "MIT",
+	"dependencies": {
+		"body-parser": "^1.18.3",
+		"express": "^4.16.4",
+		"http": "^0.0.0",
+		"twilio": "^3.27.1"
+	},
+	"scripts": {
+		"start": "node index.js"
+	}
+}
