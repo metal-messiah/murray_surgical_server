@@ -77,7 +77,7 @@ massive(
 						if (contacts.length) {
 							// contact already exists
 							dbInstance.update_contact([ name, to.replace(/\+/g, ''), date, time ]).then(() => {
-								dbInstance.update_response([ null ]).then(() => {
+								dbInstance.update_response([ to.replace(/\+/g, ''), null ]).then(() => {
 									console.log('updated contact');
 								});
 							});
@@ -143,7 +143,7 @@ massive(
 					const contact = contacts[0];
 					contactName = contact.name;
 
-					dbInstance.update_response([ bodyText ]);
+					dbInstance.update_response([ to.replace(/\+/g, ''), bodyText ]);
 				}
 
 				const subject = getSubject(bodyText, contactName);
