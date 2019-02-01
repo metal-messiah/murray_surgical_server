@@ -4,9 +4,6 @@ const http = require('http').Server(webserver);
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser');
 
-// const accountSid = 'AC564fb9d03a6a8f27b93504d3c4a402f2';
-// const authToken = 'e642e5d29c7fef672b969bb27ecd215f';
-
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
 
@@ -16,17 +13,13 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const { getInitialMessage, getResponse, getStaffNotification } = require('./messages.js');
 const { sendEmail, getSubject } = require('./emailer/emailer.js');
 
-// const staffNumbers = [ '18018915076', '18015569549' ];
-const staffNumbers = [ '18019415824' ];
+const staffNumbers = [ '18018915076', '18015569549' ];
+// const staffNumbers = [ '18019415824' ];
 
-// const postAuthKey = 'Murray$urgical2019';
 const postAuthKey = process.env.AUTH_KEY;
 
 const massive = require('massive');
-massive(
-	// 'postgres://zlrbkyykudygdx:15bab7552e3a5bb51f456c455c8609050ff45d85670f04fb115a6f0512c7cb96@ec2-54-83-50-174.compute-1.amazonaws.com:5432/d3qeagqbti2bte?ssl=true'
-	process.env.MASSIVE
-).then((dbInstance) => {
+massive(process.env.MASSIVE).then((dbInstance) => {
 	console.log('SET GLOBAL DB INSTANCE');
 
 	//   webserver.set("db", dbInstance);
