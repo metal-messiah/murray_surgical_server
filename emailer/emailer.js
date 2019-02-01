@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
-const staffEmails = [ 'murraysurgicalinfo@gmail.com', 'megan@murraysurgical.com' ];
+// const staffEmails = [ 'murraysurgicalinfo@gmail.com', 'megan@murraysurgical.com' ];
+const staffEmails = [ 'jopethemetalmessiah@gmail.com' ];
 
 const getSubject = (response, name) => {
 	console.log('subject name: ', name);
@@ -25,8 +26,7 @@ const sendEmail = (subject, message, html) => {
 			from: 'Murray Surgical Notifications',
 			to: staffEmails.join(', '),
 			// to: 'jopethemetalmessiah@gmail.com',
-			bcc: [ 'murray.surgical.notifications@gmail.com', 'megan@murraysurgical.com' ],
-			// bcc: [ 'murray.surgical.notifications@gmail.com' ],
+			bcc: [ 'murray.surgical.notifications@gmail.com' ],
 			subject: subject,
 			text: message,
 			html: html

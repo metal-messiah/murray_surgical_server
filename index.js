@@ -12,8 +12,8 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const { getInitialMessage, getResponse, getStaffNotification } = require('./messages.js');
 const { sendEmail, getSubject } = require('./emailer/emailer.js');
 
-const staffNumbers = [ '18018915076', '8015569549' ];
-// const staffNumbers = [ '18019415824' ];
+// const staffNumbers = [ '18018915076', '8015569549' ];
+const staffNumbers = [ '18019415824' ];
 
 const postAuthKey = 'Murray$urgical2019';
 
@@ -77,7 +77,9 @@ massive(
 						if (contacts.length) {
 							// contact already exists
 							dbInstance.update_contact([ name, to.replace(/\+/g, ''), date, time ]).then(() => {
-								console.log(`updated contact --> ${to} ${name}`);
+								dbInstance.update_response([ null ]).then(() => {
+									console.log('updated contact');
+								});
 							});
 						} else {
 							// contact doesnt exist, add it
@@ -140,6 +142,8 @@ massive(
 				if (contacts.length) {
 					const contact = contacts[0];
 					contactName = contact.name;
+
+					dbInstance.update_response([ bodyText ]);
 				}
 
 				const subject = getSubject(bodyText, contactName);
