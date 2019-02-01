@@ -12,8 +12,8 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const { getInitialMessage, getResponse, getStaffNotification } = require('./messages.js');
 const { sendEmail, getSubject } = require('./emailer/emailer.js');
 
-// const staffNumbers = [ '18018915076', '8015569549' ];
-const staffNumbers = [ '18019415824' ];
+const staffNumbers = [ '18018915076', '8015569549' ];
+// const staffNumbers = [ '18019415824' ];
 
 const postAuthKey = 'Murray$urgical2019';
 
