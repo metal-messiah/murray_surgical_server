@@ -7,4 +7,4 @@ SET
     time = $4,
     updated_at = $5
 WHERE
-    name = $1;
+    phone = $2;

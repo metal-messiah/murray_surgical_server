@@ -4,4 +4,4 @@ SET
     response = $2,
     updated_at = $3
 WHERE
-    name = $1;
+    phone = $1;
