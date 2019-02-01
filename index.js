@@ -143,7 +143,7 @@ massive(
 					const contact = contacts[0];
 					contactName = contact.name;
 
-					dbInstance.update_response([ to.replace(/\+/g, ''), bodyText ]);
+					dbInstance.update_response([ fromNumber, bodyText ]);
 				}
 
 				const subject = getSubject(bodyText, contactName);
