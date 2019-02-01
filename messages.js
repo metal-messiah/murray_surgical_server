@@ -1,4 +1,5 @@
-const website = 'https://metal-messiah.github.io/murray_surgical';
+// const website = 'https://metal-messiah.github.io/murray_surgical';
+const website = process.env.WEBSITE;
 
 // The First Message To Be Sent To The Client
 const getInitialMessage = (name, date, time) => {

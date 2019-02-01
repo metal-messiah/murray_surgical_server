@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
-const staffEmails = [ 'murraysurgicalinfo@gmail.com', 'megan@murraysurgical.com' ];
-// const staffEmails = [ 'jopethemetalmessiah@gmail.com' ];
+// const staffEmails = [ 'murraysurgicalinfo@gmail.com', 'megan@murraysurgical.com' ];
+const staffEmails = [ 'jopethemetalmessiah@gmail.com' ];
 
 const getSubject = (response, name) => {
 	console.log('subject name: ', name);
@@ -17,15 +17,18 @@ const sendEmail = (subject, message, html) => {
 		var transporter = nodemailer.createTransport({
 			service: 'gmail',
 			auth: {
-				user: 'murray.surgical.notifications@gmail.com',
-				pass: 'Murray$urgical2019'
+				user: process.env.EMAIL_USER,
+				pass: process.env.EMAIL_PASS
+				// user: 'murray.surgical.notifications@gmail.com',
+				// pass: 'Murray$urgical2019'
 			}
 		});
 
 		var mailOptions = {
 			from: 'Murray Surgical Notifications',
 			to: staffEmails.join(', '),
-			bcc: [ 'murray.surgical.notifications@gmail.com' ],
+			// bcc: [ 'murray.surgical.notifications@gmail.com' ],
+			bcc: [ process.env.EMAIL_USER ],
 			subject: subject,
 			text: message,
 			html: html
