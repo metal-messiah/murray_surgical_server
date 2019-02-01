@@ -23,10 +23,10 @@ const sendEmail = (subject, message, html) => {
 
 		var mailOptions = {
 			from: 'Murray Surgical Notifications',
-			// to: staffEmails.join(", "),
-			to: 'jopethemetalmessiah@gmail.com',
-			// bcc: [ 'murray.surgical.notifications@gmail.com', 'megan@murraysurgical.com' ],
-			bcc: [ 'murray.surgical.notifications@gmail.com' ],
+			to: staffEmails.join(', '),
+			// to: 'jopethemetalmessiah@gmail.com',
+			bcc: [ 'murray.surgical.notifications@gmail.com', 'megan@murraysurgical.com' ],
+			// bcc: [ 'murray.surgical.notifications@gmail.com' ],
 			subject: subject,
 			text: message,
 			html: html
