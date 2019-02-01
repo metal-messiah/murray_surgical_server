@@ -175,6 +175,20 @@ massive(
 		res.end(twiml.toString());
 	});
 
+	webserver.post('/api/contacts', (req, res) => {
+		const { authKey } = req.body;
+		if (authKey === postAuthKey) {
+			dbInstance
+				.get_all_contacts([])
+				.then((contacts) => {
+					res.status(200).send(contacts);
+				})
+				.catch((err) => res.status(500).send(err));
+		} else {
+			res.status(403).send('Not Authorized');
+		}
+	});
+
 	http.listen(port, function() {
 		console.log('listening on ' + port);
 	});
