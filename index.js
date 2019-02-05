@@ -188,7 +188,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 		}
 	});
 
-	webserver.post('/api/contacts/:id', (req, res) => {
+	webserver.delete('/api/contacts/:id', (req, res) => {
 		const { authKey } = req.body;
 		const { id } = req.params;
 		if (authKey === postAuthKey) {
