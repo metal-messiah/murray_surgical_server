@@ -13,8 +13,8 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const { getInitialMessage, getResponse, getStaffNotification } = require('./messages.js');
 const { sendEmail, getSubject } = require('./emailer/emailer.js');
 
-const staffNumbers = [ '18018915076', '18015569549' ];
-// const staffNumbers = [ '18019415824' ];
+// const staffNumbers = [ '18018915076', '18015569549' ];
+const staffNumbers = [ '18019415824' ];
 
 const postAuthKey = process.env.AUTH_KEY;
 
@@ -54,7 +54,8 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 
 	webserver.post('/api/send-sms', (req, res) => {
 		try {
-			let { to, name, date, time, authKey } = req.body;
+			let { to, name, date, time, authKey, isSpanish } = req.body;
+			let lang = isSpanish ? 'es' : 'en';
 			if (authKey === postAuthKey) {
 				if (to) {
 					if (typeof to === 'number') {
@@ -68,7 +69,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 						to = `+${to}`;
 					}
 
-					const msg = getInitialMessage(name, date, time);
+					const msg = getInitialMessage(name, date, time, lang);
 
 					// tempContacts[to] = { name, date, time };
 
@@ -76,7 +77,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 						if (contacts.length) {
 							// contact already exists
 							dbInstance
-								.update_contact([ name, to.replace(/\+/g, ''), date, time, new Date() ])
+								.update_contact([ name, to.replace(/\+/g, ''), date, time, new Date(), lang ])
 								.then(() => {
 									dbInstance.update_response([ to.replace(/\+/g, ''), null, new Date() ]).then(() => {
 										console.log('updated contact');
@@ -84,7 +85,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 								});
 						} else {
 							// contact doesnt exist, add it
-							dbInstance.add_contact([ name, to.replace(/\+/g, ''), date, time ]).then(() => {
+							dbInstance.add_contact([ name, to.replace(/\+/g, ''), date, time, lang ]).then(() => {
 								console.log(`added new contact --> ${to} ${name}`);
 							});
 						}
@@ -111,30 +112,10 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 	});
 
 	webserver.post('/api/receive-sms', (req, res) => {
-		const {
-			ToCountry,
-			ToState,
-			SmSMessageSid,
-			NumMedia,
-			ToCity,
-			FromZip,
-			SmsSid,
-			FromState,
-			SmsStatus,
-			FromCity,
-			Body,
-			FromCountry,
-			To,
-			ToZip,
-			NumSegments,
-			MessageSid,
-			AccountSid,
-			From,
-			ApiVersion
-		} = req.body;
+		const { Body, From } = req.body;
 		let bodyText = Body.toLowerCase();
 		let fromNumber = From.replace(/\+/g, '').trim();
-		const response = getResponse(bodyText);
+		let lang = 'en';
 
 		if (bodyText === 'no' || bodyText === 'yes') {
 			dbInstance.get_contact([ fromNumber.replace(/\+/g, '') ]).then((contacts) => {
@@ -143,6 +124,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 				if (contacts.length) {
 					const contact = contacts[0];
 					contactName = contact.name;
+					lang = contact.lang;
 
 					dbInstance.update_response([ fromNumber, bodyText, new Date() ]);
 				}
@@ -168,6 +150,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 
 		const twiml = new MessagingResponse();
 
+		const response = getResponse(bodyText, lang);
 		twiml.message(response);
 
 		res.writeHead(200, { 'Content-Type': 'text/xml' });
