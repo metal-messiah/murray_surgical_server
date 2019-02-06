@@ -1,7 +1,6 @@
 // const website = 'https://metal-messiah.github.io/murray_surgical';
 const website = process.env.WEBSITE;
 const mapLink = 'https://goo.gl/Y6W8wE';
-const translate = require('translate');
 
 // The First Message To Be Sent To The Client
 const getInitialMessage = (name, date, time, lang) => {
@@ -18,7 +17,8 @@ const getResponse = (response, lang) => {
 	response = response.toLowerCase();
 	if (lang === 'en') {
 		if (response === 'yes') {
-			return `Thank you for confirming your appointment with Murray Surgical. Please review required pre-surgery instructions at ${website}/surgery .  If you have any questions, please call 801-983-6819 during normal office hours. 5801 S. Fashion Blvd. #190. ${mapLink}`;
+			return `Thank you for confirming your appointment with Murray Surgical. Please review required pre-surgery instructions at ${website}/surgery. 
+			If you have any questions, please call 801-983-6819 during normal office hours. 5801 S. Fashion Blvd. #190. ${mapLink}`;
 		} else if (response === 'no') {
 			return `You have indicated you want to cancel your appointment with Murray Surgical. A representative will contact you shortly. Please note you may be charged a cancellation fee.`;
 		} else {
@@ -26,8 +26,9 @@ const getResponse = (response, lang) => {
 		}
 	}
 	if (lang === 'es') {
-		if (response === 'yes') {
-			return `Gracias por confirmar su cita con Murray Surgical. Por favor revise las instrucciones requeridas antes de la cirugía en $ {website} / surgery. Si tiene alguna pregunta, llame al 801-983-6819 durante el horario normal de oficina. 5801 S. Fashion Blvd. # 190. ${mapLink}`;
+		if (response === 'yes' || response === 'si') {
+			return `Gracias por confirmar su cita con Murray Surgical. Por favor revise las instrucciones requeridas antes de la cirugía en ${website}/surgery. 
+			Si tiene alguna pregunta, llame al 801-983-6819 durante el horario normal de oficina. 5801 S. Fashion Blvd. # 190. ${mapLink}`;
 		} else if (response === 'no') {
 			return `Usted ha indicado que desea cancelar su cita con Murray Surgical. Un representante lo contactará en breve. Tenga en cuenta que se le puede cobrar una tarifa de cancelación.`;
 		} else {

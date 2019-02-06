@@ -13,8 +13,8 @@ const MessagingResponse = require('twilio').twiml.MessagingResponse;
 const { getInitialMessage, getResponse, getStaffNotification } = require('./messages.js');
 const { sendEmail, getSubject } = require('./emailer/emailer.js');
 
-// const staffNumbers = [ '18018915076', '18015569549' ];
-const staffNumbers = [ '18019415824' ];
+const staffNumbers = [ '18018915076', '18015569549' ];
+// const staffNumbers = [ '18019415824' ];
 
 const postAuthKey = process.env.AUTH_KEY;
 
@@ -133,7 +133,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 					dbInstance.update_response([ fromNumber, bodyText, new Date() ]);
 				}
 
-				if (bodyText === 'no' || bodyText === 'yes') {
+				if (bodyText === 'no' || bodyText === 'yes' || bodyText === 'si') {
 					const subject = getSubject(bodyText, contactName);
 					const msg = getStaffNotification(bodyText, fromNumber, contactName);
 					const html = msg;
