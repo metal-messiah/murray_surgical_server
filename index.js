@@ -124,6 +124,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 				if (contacts.length) {
 					const contact = contacts[0];
 					contactName = contact.name;
+					console.log('lang will equal ', contact.lang);
 					lang = contact.lang;
 
 					dbInstance.update_response([ fromNumber, bodyText, new Date() ]);
