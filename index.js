@@ -150,6 +150,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 
 		const twiml = new MessagingResponse();
 
+		console.log(lang);
 		const response = getResponse(bodyText, lang);
 		twiml.message(response);
 
