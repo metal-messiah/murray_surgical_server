@@ -52,6 +52,37 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 		})
 	);
 
+	webserver.post('/api/preview-sms', (req, res) => {
+		try {
+			let { to, name, date, time, authKey, isSpanish } = req.body;
+			let lang = isSpanish ? 'es' : 'en';
+			if (authKey === postAuthKey) {
+				if (to) {
+					if (typeof to === 'number') {
+						to = to.toString().trim();
+					}
+
+					to = to.replace(/[^0-9]/g, '');
+					if (to.length < 11) {
+						to = '1' + to;
+					} else {
+						to = `+${to}`;
+					}
+
+					const msg = getInitialMessage(name, date, time, lang);
+					res.status(200).send(msg);
+				} else {
+					res.status(400).send('missing param');
+				}
+			} else {
+				res.status(403).send('Invalid Key');
+			}
+		} catch (err) {
+			console.log(err);
+			res.status(500).send(err);
+		}
+	});
+
 	webserver.post('/api/send-sms', (req, res) => {
 		try {
 			let { to, name, date, time, authKey, isSpanish } = req.body;
