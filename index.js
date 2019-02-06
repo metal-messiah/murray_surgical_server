@@ -115,48 +115,51 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 		const { Body, From } = req.body;
 		let bodyText = Body.toLowerCase();
 		let fromNumber = From.replace(/\+/g, '').trim();
-		let lang = 'en';
 
-		if (bodyText === 'no' || bodyText === 'yes') {
-			dbInstance.get_contact([ fromNumber.replace(/\+/g, '') ]).then((contacts) => {
+		const twiml = new MessagingResponse();
+
+		dbInstance
+			.get_contact([ fromNumber.replace(/\+/g, '') ])
+			.then((contacts) => {
 				let contactName = '';
+				let lang = 'en';
 
 				if (contacts.length) {
 					const contact = contacts[0];
 					contactName = contact.name;
-					console.log('lang will equal ', contact.lang);
+					console.log('getting response in lang: ', contact.lang);
 					lang = contact.lang;
 
 					dbInstance.update_response([ fromNumber, bodyText, new Date() ]);
 				}
 
-				const subject = getSubject(bodyText, contactName);
-				const msg = getStaffNotification(bodyText, fromNumber, contactName);
-				const html = msg;
+				if (bodyText === 'no' || bodyText === 'yes') {
+					const subject = getSubject(bodyText, contactName);
+					const msg = getStaffNotification(bodyText, fromNumber, contactName);
+					const html = msg;
 
-				sendEmail(subject, msg, html);
+					sendEmail(subject, msg, html);
 
-				staffNumbers.forEach((n) => {
-					client.messages
-						.create({
-							body: msg,
-							from: '+13852472023',
-							to: n
-						})
-						.then((message) => console.log('notified ' + n))
-						.done();
-				});
-			});
-		}
+					staffNumbers.forEach((n) => {
+						client.messages
+							.create({
+								body: msg,
+								from: '+13852472023',
+								to: n
+							})
+							.then((message) => console.log('notified ' + n))
+							.done();
+					});
+				}
 
-		const twiml = new MessagingResponse();
+				console.log(lang);
+				const response = getResponse(bodyText, lang);
+				twiml.message(response);
 
-		console.log(lang);
-		const response = getResponse(bodyText, lang);
-		twiml.message(response);
-
-		res.writeHead(200, { 'Content-Type': 'text/xml' });
-		res.end(twiml.toString());
+				res.writeHead(200, { 'Content-Type': 'text/xml' });
+				res.end(twiml.toString());
+			})
+			.catch((err) => res.end());
 	});
 
 	webserver.post('/api/contacts', (req, res) => {
