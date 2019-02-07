@@ -228,7 +228,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 	});
 
 	webserver.patch('/api/contacts/:id', (req, res) => {
-		const { name, phone, date, time, response, lang } = req.body;
+		const { name, phone, date, time, response, lang, authKey } = req.body;
 		const { id } = req.params;
 		if (authKey === postAuthKey) {
 			dbInstance
