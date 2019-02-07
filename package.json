@@ -4,6 +4,10 @@
 	"description": "twilio rest server",
 	"main": "index.js",
 	"license": "MIT",
+	"engines": {
+		"node": "8.11.2",
+		"yarn": "1.6.0"
+	},
 	"dependencies": {
 		"body-parser": "^1.18.3",
 		"express": "^4.16.4",
