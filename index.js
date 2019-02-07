@@ -232,16 +232,10 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 		const { id } = req.params;
 		if (authKey === postAuthKey) {
 			dbInstance
-				.get_contact([ id ])
+				.get_contact_by_id([ id ])
 				.then((contacts) => {
 					const contact = contacts[0];
 					if (contact) {
-						let oldPhone = null;
-						if (phone) {
-							// phone is changing, but its our UID right now... keep track for a sec so we can use it for 'WHERE' in the SQL
-							oldPhone = contact.phone;
-						}
-
 						contact.name = name ? name : contact.name;
 						contact.phone = phone ? phone : contact.phone;
 						contact.date = date ? date : contact.date;
@@ -250,7 +244,15 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 						contact.lang = lang ? lang : contact.lang;
 
 						dbInstance
-							.update_contact([ oldPhone ? oldPhone : contact.phone ])
+							.update_contact_by_id([
+								contact.name,
+								contact.phone,
+								contact.date,
+								contact.time,
+								new Date(),
+								contact.lang,
+								id
+							])
 							.then((contacts) => {
 								res.status(200).send(contacts);
 							})

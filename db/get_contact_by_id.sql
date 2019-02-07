@@ -1,0 +1,1 @@
+select * from contacts where id = $1;
