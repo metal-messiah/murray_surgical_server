@@ -8,7 +8,7 @@ const getInitialMessage = (name, date, time, lang) => {
 		return `Hi ${name}, you have an appointment with Murray Surgical scheduled for ${date} at ${time}. To confirm your appointment, reply YES. To cancel, reply NO. `;
 	}
 	if (lang === 'es') {
-		return `Hola ${name}, tiene una cita con Murray Surgical programada para ${date} a ${time}. Para confirmar su cita, responda YES. Para cancelar, responda NO.`;
+		return `Hola ${name}, tiene una cita con Murray Surgical para ${date} a ${time}. Para confirmar su cita, responda YES. Para cancelar, responda NO.`;
 	}
 };
 

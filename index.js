@@ -253,8 +253,8 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 								contact.lang,
 								id
 							])
-							.then((contacts) => {
-								res.status(200).send(contacts);
+							.then(() => {
+								res.status(200).send(true);
 							})
 							.catch((err) => res.status(500).send(err));
 					} else {
