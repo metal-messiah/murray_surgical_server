@@ -29,6 +29,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 		try {
 			res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
 			res.setHeader('Access-Control-Allow-Methods', 'OPTIONS, GET, POST, DELETE, PATCH');
+
 			// res.setHeader('Access-Control-Allow-Methods', '*');
 			// Note that the origin of an extension iframe will be null
 			// so the Access-Control-Allow-Origin has to be wildcard.
