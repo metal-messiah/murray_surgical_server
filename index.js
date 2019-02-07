@@ -227,6 +227,44 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 		}
 	});
 
+	webserver.patch('/api/contacts/:id', (req, res) => {
+		const { name, phone, date, time, response, lang } = req.body;
+		const { id } = req.params;
+		if (authKey === postAuthKey) {
+			dbInstance
+				.get_contact([ id ])
+				.then((contacts) => {
+					const contact = contacts[0];
+					if (contact) {
+						let oldPhone = null;
+						if (phone) {
+							// phone is changing, but its our UID right now... keep track for a sec so we can use it for 'WHERE' in the SQL
+							oldPhone = contact.phone;
+						}
+
+						contact.name = name ? name : contact.name;
+						contact.phone = phone ? phone : contact.phone;
+						contact.date = date ? date : contact.date;
+						contact.time = time ? time : contact.time;
+						contact.response = response ? response : contact.response;
+						contact.lang = lang ? lang : contact.lang;
+
+						dbInstance
+							.update_contact([ oldPhone ? oldPhone : contact.phone ])
+							.then((contacts) => {
+								res.status(200).send(contacts);
+							})
+							.catch((err) => res.status(500).send(err));
+					} else {
+						res.status(404).send('No Resource Found For ID ' + id);
+					}
+				})
+				.catch((err) => res.status(500).send(err));
+		} else {
+			res.status(403).send('Not Authorized');
+		}
+	});
+
 	http.listen(port, function() {
 		console.log('listening on ' + port);
 	});
