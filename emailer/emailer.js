@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
-// const staffEmails = [ 'murraysurgicalinfo@gmail.com', 'megan@murraysurgical.com' ];
-const staffEmails = [ 'jopethemetalmessiah@gmail.com' ];
+const staffEmails = [ 'murraysurgicalinfo@gmail.com', 'megan@murraysurgical.com' ];
+// const staffEmails = [ 'jopethemetalmessiah@gmail.com' ];
 
 const getSubject = (response, name) => {
 	console.log('subject name: ', name);

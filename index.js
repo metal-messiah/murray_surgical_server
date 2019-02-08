@@ -20,8 +20,8 @@ const {
 } = require('./messages.js');
 const { sendEmail, getSubject } = require('./emailer/emailer.js');
 
-// const staffNumbers = [ '18018915076', '18015569549' ];
-const staffNumbers = [ '18019415824' ];
+const staffNumbers = [ '18018915076', '18015569549' ];
+// const staffNumbers = [ '18019415824' ];
 
 const postAuthKey = process.env.AUTH_KEY;
 
