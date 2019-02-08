@@ -1,6 +1,7 @@
 // const website = 'https://metal-messiah.github.io/murray_surgical';
 const website = process.env.WEBSITE;
-const mapLink = 'https://goo.gl/Y6W8wE';
+const mapLink = process.env.GOOGLE_MAPS_LINK;
+const surveyLink = process.env.SURVEY_LINK;
 
 // The First Message To Be Sent To The Client
 const getInitialMessage = (name, date, time, lang) => {
@@ -52,4 +53,21 @@ const getStaffNotification = (response, phone, name) => {
 	}
 };
 
-module.exports = { getInitialMessage, getResponse, getStaffNotification };
+// An Update Message To Be Sent To The Client When DB Changes
+const getUpdateMessage = (name, date, time, lang) => {
+	if (lang === 'en') {
+		return `Hi ${name}, Murray Surgical has updated your appointment. It is now scheduled for ${date} at ${time}. To confirm your appointment, reply YES. To cancel, reply NO. `;
+	}
+	if (lang === 'es') {
+		return `Hola ${name}, tiene una cita con Murray Surgical para ${date} a ${time}. Para confirmar su cita, responda YES. Para cancelar, responda NO.`;
+	}
+};
+
+// A message containing a link to a google survey
+const getSurveyMessage = (name, lang) => {
+	if (lang === 'en') {
+		return `Hi ${name}, Murray Surgical has shared a short survey with you. ${surveyLink}`;
+	}
+};
+
+module.exports = { getInitialMessage, getResponse, getStaffNotification, getUpdateMessage, getSurveyMessage };

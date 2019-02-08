@@ -6,15 +6,22 @@ const bodyParser = require('body-parser');
 
 const accountSid = process.env.TWILIO_ACCOUNT_SID;
 const authToken = process.env.TWILIO_AUTH_TOKEN;
+const twilioNumber = process.env.TWILIO_NUMBER;
 
 const client = require('twilio')(accountSid, authToken);
 const MessagingResponse = require('twilio').twiml.MessagingResponse;
 
-const { getInitialMessage, getResponse, getStaffNotification } = require('./messages.js');
+const {
+	getInitialMessage,
+	getResponse,
+	getStaffNotification,
+	getUpdateMessage,
+	getSurveyMessage
+} = require('./messages.js');
 const { sendEmail, getSubject } = require('./emailer/emailer.js');
 
-const staffNumbers = [ '18018915076', '18015569549' ];
-// const staffNumbers = [ '18019415824' ];
+// const staffNumbers = [ '18018915076', '18015569549' ];
+const staffNumbers = [ '18019415824' ];
 
 const postAuthKey = process.env.AUTH_KEY;
 
@@ -128,7 +135,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 					client.messages
 						.create({
 							body: msg,
-							from: '+13852472023',
+							from: twilioNumber,
 							to: to
 						})
 						.then((message) => res.status(200).send(message))
@@ -178,7 +185,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 						client.messages
 							.create({
 								body: msg,
-								from: '+13852472023',
+								from: twilioNumber,
 								to: n
 							})
 							.then((message) => console.log('notified ' + n))
@@ -194,6 +201,79 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 				res.end(twiml.toString());
 			})
 			.catch((err) => res.end());
+	});
+
+	webserver.post('/api/send-update-sms/:id', (req, res) => {
+		try {
+			let { authKey } = req.body;
+			let { id } = req.params;
+
+			if (authKey === postAuthKey) {
+				dbInstance
+					.get_contact_by_id([ id ])
+					.then((contacts) => {
+						if (contacts.length) {
+							let contact = contacts[0];
+							let { name, date, time, lang, phone } = contact;
+							const msg = getUpdateMessage(name, date, time, lang);
+							client.messages
+								.create({
+									body: msg,
+									from: twilioNumber,
+									to: phone
+								})
+								.then((message) => res.status(200).send(message))
+								.done();
+						} else {
+							res.status(404).send('No Resource Found For ID ' + id);
+						}
+					})
+					.catch((err) => res.status(500).send(err));
+			} else {
+				res.status(403).send('Invalid Key');
+			}
+		} catch (err) {
+			console.log(err);
+			res.status(500).send(err);
+		}
+	});
+
+	webserver.post('/api/send-survey-sms/:id', (req, res) => {
+		try {
+			let { authKey } = req.body;
+			let { id } = req.params;
+
+			if (authKey === postAuthKey) {
+				dbInstance
+					.get_contact_by_id([ id ])
+					.then((contacts) => {
+						if (contacts.length) {
+							let contact = contacts[0];
+							let { name, lang, phone, id } = contact;
+							const msg = getSurveyMessage(name, lang);
+							client.messages
+								.create({
+									body: msg,
+									from: twilioNumber,
+									to: phone
+								})
+								.then((message) => {
+									dbInstance.update_survey([ id, new Date() ]);
+									res.status(200).send(message);
+								})
+								.done();
+						} else {
+							res.status(404).send('No Resource Found For ID ' + id);
+						}
+					})
+					.catch((err) => res.status(500).send(err));
+			} else {
+				res.status(403).send('Invalid Key');
+			}
+		} catch (err) {
+			console.log(err);
+			res.status(500).send(err);
+		}
 	});
 
 	webserver.post('/api/contacts', (req, res) => {
