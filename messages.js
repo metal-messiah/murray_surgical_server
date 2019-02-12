@@ -68,6 +68,9 @@ const getSurveyMessage = (name, lang) => {
 	if (lang === 'en') {
 		return `Hi ${name}, Murray Surgical has shared a short survey with you. ${surveyLink}`;
 	}
+	if (lang === 'es') {
+		return `Hola, ${name}, Murray Surgical ha compartido una breve encuesta contigo. ${surveyLink}`;
+	}
 };
 
 module.exports = { getInitialMessage, getResponse, getStaffNotification, getUpdateMessage, getSurveyMessage };
