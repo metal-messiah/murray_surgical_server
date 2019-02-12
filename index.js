@@ -62,6 +62,10 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 		})
 	);
 
+	webserver.get('/api/wake', (req, res) => {
+		res.send(true);
+	});
+
 	webserver.post('/api/preview-sms', (req, res) => {
 		try {
 			let { to, name, date, time, authKey, isSpanish } = req.body;
