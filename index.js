@@ -165,16 +165,19 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 				let contactName = '';
 				let lang = 'en';
 
+				let shouldReply = false;
+
 				if (contacts.length) {
 					const contact = contacts[0];
 					contactName = contact.name;
 					console.log('getting response in lang: ', contact.lang);
 					lang = contact.lang;
+					shouldReply = true;
 
 					dbInstance.update_response([ fromNumber, bodyText, new Date() ]);
 				}
 
-				if (bodyText === 'no' || bodyText === 'yes' || bodyText === 'si') {
+				if ((bodyText === 'no' || bodyText === 'yes' || bodyText === 'si') && contacts.length) {
 					const subject = getSubject(bodyText, contactName);
 					const msg = getStaffNotification(bodyText, fromNumber, contactName);
 					const html = msg;
@@ -193,12 +196,16 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 					});
 				}
 
-				console.log(lang);
-				const response = getResponse(bodyText, lang);
-				twiml.message(response);
+				// console.log(lang);
+				if (shouldReply) {
+					const response = getResponse(bodyText, lang);
+					twiml.message(response);
 
-				res.writeHead(200, { 'Content-Type': 'text/xml' });
-				res.end(twiml.toString());
+					res.writeHead(200, { 'Content-Type': 'text/xml' });
+					res.end(twiml.toString());
+				} else {
+					res.status(404).send(`No User Found With ${fromNumber}`);
+				}
 			})
 			.catch((err) => res.end());
 	});
