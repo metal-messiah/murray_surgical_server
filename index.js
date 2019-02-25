@@ -68,7 +68,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 
 	webserver.post('/api/preview-sms', (req, res) => {
 		try {
-			let { to, name, date, time, authKey, isSpanish } = req.body;
+			let { to, name, date, time, reason, authKey, isSpanish } = req.body;
 			let lang = isSpanish ? 'es' : 'en';
 			if (authKey === postAuthKey) {
 				if (to) {
@@ -83,7 +83,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 						to = `+${to}`;
 					}
 
-					const msg = getInitialMessage(name, date, time, lang);
+					const msg = getInitialMessage(name, date, time, reason, lang);
 					res.status(200).send(msg);
 				} else {
 					res.status(400).send('missing param');
@@ -99,7 +99,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 
 	webserver.post('/api/send-sms', (req, res) => {
 		try {
-			let { to, name, date, time, authKey, isSpanish } = req.body;
+			let { to, name, date, time, reason, authKey, isSpanish } = req.body;
 			let lang = isSpanish ? 'es' : 'en';
 			if (authKey === postAuthKey) {
 				if (to) {
@@ -114,7 +114,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 						to = `+${to}`;
 					}
 
-					const msg = getInitialMessage(name, date, time, lang);
+					const msg = getInitialMessage(name, date, time, reason, lang);
 
 					// tempContacts[to] = { name, date, time };
 
@@ -122,7 +122,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 						if (contacts.length) {
 							// contact already exists
 							dbInstance
-								.update_contact([ name, to.replace(/\+/g, ''), date, time, new Date(), lang ])
+								.update_contact([ name, to.replace(/\+/g, ''), date, time, reason, new Date(), lang ])
 								.then(() => {
 									dbInstance.update_response([ to.replace(/\+/g, ''), null, new Date() ]).then(() => {
 										console.log('updated contact');
@@ -130,9 +130,11 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 								});
 						} else {
 							// contact doesnt exist, add it
-							dbInstance.add_contact([ name, to.replace(/\+/g, ''), date, time, lang ]).then(() => {
-								console.log(`added new contact --> ${to} ${name}`);
-							});
+							dbInstance
+								.add_contact([ name, to.replace(/\+/g, ''), date, time, reason, lang ])
+								.then(() => {
+									console.log(`added new contact --> ${to} ${name}`);
+								});
 						}
 					});
 
@@ -225,8 +227,8 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 					.then((contacts) => {
 						if (contacts.length) {
 							let contact = contacts[0];
-							let { name, date, time, lang, phone } = contact;
-							const msg = getUpdateMessage(name, date, time, lang);
+							let { name, date, time, reason, lang, phone } = contact;
+							const msg = getUpdateMessage(name, date, time, reason, lang);
 							client.messages
 								.create({
 									body: msg,
@@ -322,7 +324,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 	});
 
 	webserver.patch('/api/contacts/:id', (req, res) => {
-		const { name, phone, date, time, response, lang, authKey } = req.body;
+		const { name, phone, date, time, reason, response, lang, authKey } = req.body;
 		const { id } = req.params;
 		if (authKey === postAuthKey) {
 			dbInstance
@@ -336,6 +338,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 						contact.time = time ? time : contact.time;
 						contact.response = response ? response : contact.response;
 						contact.lang = lang ? lang : contact.lang;
+						contact.reason = reason ? reason : contact.reason;
 
 						dbInstance
 							.update_contact_by_id([
@@ -343,6 +346,7 @@ massive(process.env.MASSIVE).then((dbInstance) => {
 								contact.phone,
 								contact.date,
 								contact.time,
+								contact.reason,
 								new Date(),
 								contact.lang,
 								id
