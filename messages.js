@@ -6,10 +6,14 @@ const surveyLink = process.env.SURVEY_LINK;
 // The First Message To Be Sent To The Client
 const getInitialMessage = (name, date, time, reason, lang) => {
 	if (lang === 'en') {
-		return `Hi ${name}, you have an appointment (${reason}) with Murray Surgical scheduled for ${date} at ${time}. To confirm your appointment, reply YES. To cancel, reply NO. `;
+		return `Hi ${name}, you have an appointment${reason
+			? ` (${reason})`
+			: ``} with Murray Surgical scheduled for ${date} at ${time}. To confirm your appointment, reply YES. To cancel, reply NO. `;
 	}
 	if (lang === 'es') {
-		return `Hola ${name}, tiene una cita (${reason}) con Murray Surgical para ${date} a ${time}. Para confirmar su cita, responda YES. Para cancelar, responda NO.`;
+		return `Hola ${name}, tiene una cita${reason
+			? ` (${reason})`
+			: ``} con Murray Surgical para ${date} a ${time}. Para confirmar su cita, responda YES. Para cancelar, responda NO.`;
 	}
 };
 
@@ -56,10 +60,14 @@ const getStaffNotification = (response, phone, name) => {
 // An Update Message To Be Sent To The Client When DB Changes
 const getUpdateMessage = (name, date, time, reason, lang) => {
 	if (lang === 'en') {
-		return `Hi ${name}, Murray Surgical has updated your appointment (${reason}). It is now scheduled for ${date} at ${time}. To confirm your appointment, reply YES. To cancel, reply NO. `;
+		return `Hi ${name}, Murray Surgical has updated your appointment${reason
+			? ` (${reason})`
+			: ``}. It is now scheduled for ${date} at ${time}. To confirm your appointment, reply YES. To cancel, reply NO. `;
 	}
 	if (lang === 'es') {
-		return `Hola ${name}, tiene una cita (${reason}) con Murray Surgical para ${date} a ${time}. Para confirmar su cita, responda YES. Para cancelar, responda NO.`;
+		return `Hola ${name}, tiene una cita${reason
+			? ` (${reason})`
+			: ``} con Murray Surgical para ${date} a ${time}. Para confirmar su cita, responda YES. Para cancelar, responda NO.`;
 	}
 };
 
