@@ -8,12 +8,12 @@ const getInitialMessage = (name, date, time, reason, lang) => {
 	if (lang === 'en') {
 		return `Hi ${name}, you have an appointment${reason
 			? ` (${reason})`
-			: ``} with Murray Surgical scheduled for ${date} at ${time}. To confirm your appointment, reply YES. To cancel, reply NO. `;
+			: ``} with Murray Surgical scheduled for ${date} at ${time}. Please review required pre-surgery instructions at ${website}/surgery. To confirm your appointment and that you've read the instructions, reply YES. For further questions, reply NO.`;
 	}
 	if (lang === 'es') {
 		return `Hola ${name}, tiene una cita${reason
 			? ` (${reason})`
-			: ``} con Murray Surgical para ${date} a ${time}. Para confirmar su cita, responda YES. Para cancelar, responda NO.`;
+			: ``} con Murray Surgical para ${date} a ${time}. Por favor revise las instrucciones requeridas antes de la cirugía en ${website}/surgery. Para confirmar su cita y que ha leído las instrucciones, responda YES. Para más preguntas, responda NO.`;
 	}
 };
 
@@ -22,20 +22,18 @@ const getResponse = (response, lang) => {
 	response = response.toLowerCase();
 	if (lang === 'en') {
 		if (response === 'yes') {
-			return `Thank you for confirming your appointment with Murray Surgical. Please review required pre-surgery instructions at ${website}/surgery. 
-			If you have any questions, please call 801-983-6819 during normal office hours. 5801 S. Fashion Blvd. #190. ${mapLink}`;
+			return `Thank you for confirming your appointment with Murray Surgical. If you have any questions, please call 801-983-6819 during normal office hours. 5801 S. Fashion Blvd. #190. ${mapLink}`;
 		} else if (response === 'no') {
-			return `You have indicated you want to cancel your appointment with Murray Surgical. A representative will contact you shortly. Please note you may be charged a cancellation fee.`;
+			return `Thank you, a representative will contact you shortly.`;
 		} else {
 			return `'${response}' was an invalid response. To confirm your appointment, reply YES. To cancel, reply NO.`;
 		}
 	}
 	if (lang === 'es') {
 		if (response === 'yes' || response === 'si') {
-			return `Gracias por confirmar su cita con Murray Surgical. Por favor revise las instrucciones requeridas antes de la cirugía en ${website}/surgery. 
-			Si tiene alguna pregunta, llame al 801-983-6819 durante el horario normal de oficina. 5801 S. Fashion Blvd. # 190. ${mapLink}`;
+			return `Gracias por confirmar su cita con Murray Surgical. Si tiene alguna pregunta, llame al 801-983-6819 durante el horario normal de oficina. 5801 S. Fashion Blvd. # 190. ${mapLink}`;
 		} else if (response === 'no') {
-			return `Usted ha indicado que desea cancelar su cita con Murray Surgical. Un representante lo contactará en breve. Tenga en cuenta que se le puede cobrar una tarifa de cancelación.`;
+			return `Gracias, Un representante lo contactará en breve.`;
 		} else {
 			return `'${response}' fue una respuesta no válida. Para confirmar su cita, responda YES. Para cancelar, responda NO.`;
 		}
@@ -53,7 +51,7 @@ const getStaffNotification = (response, phone, name) => {
 	if (response === 'no') {
 		return `${name ? name + ' (' : ''}${phone}${name
 			? ')'
-			: ''} has cancelled their appointment.  Please contact them.`;
+			: ''} has requested more information. Please contact them.`;
 	}
 };
 

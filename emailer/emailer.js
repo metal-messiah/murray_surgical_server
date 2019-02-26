@@ -1,11 +1,11 @@
 const nodemailer = require('nodemailer');
-const staffEmails = [ 'murraysurgicalinfo@gmail.com', 'megan@murraysurgical.com' ];
+const staffEmails = [];
 // const staffEmails = [ 'jopethemetalmessiah@gmail.com' ];
 
 const getSubject = (response, name) => {
 	console.log('subject name: ', name);
 	if (response === 'no') {
-		return `${name ? name + ' - ' : ''}Appointment Cancelled`;
+		return `${name ? name + ' - ' : ''}Requested More Information`;
 	}
 	if (response === 'yes') {
 		return `${name ? name + ' - ' : ''}Appointment Confirmed`;
