@@ -6,14 +6,10 @@ const surveyLink = process.env.SURVEY_LINK;
 // The First Message To Be Sent To The Client
 const getInitialMessage = (name, date, time, reason, lang) => {
 	if (lang === 'en') {
-		return `Hi ${name}, you have an appointment${reason
-			? ` (${reason})`
-			: ``} with Murray Surgical scheduled for ${date} at ${time}. Please review required pre-surgery instructions at ${website}/surgery. To confirm your appointment and that you've read the instructions, reply YES. For further questions, reply NO.`;
+		return `Hi ${name}, you have a ${reason} appointment with Murray Surgical scheduled for ${date} at ${time}. Arrive 20 minutes early. Please review required pre-surgery instructions at ${website}/surgery. To confirm your appointment and that you've read the instructions, reply YES. For further questions, reply NO.`;
 	}
 	if (lang === 'es') {
-		return `Hola ${name}, tiene una cita${reason
-			? ` (${reason})`
-			: ``} con Murray Surgical para ${date} a ${time}. Por favor revise las instrucciones requeridas antes de la cirugía en ${website}/surgery. Para confirmar su cita y que ha leído las instrucciones, responda YES. Para más preguntas, responda NO.`;
+		return `Hola ${name}, tiene una ${reason} cita con Murray Surgical para ${date} a ${time}. Por favor revise las instrucciones requeridas antes de la cirugía en ${website}/surgery. Para confirmar su cita y que ha leído las instrucciones, responda YES. Para más preguntas, responda NO.`;
 	}
 };
 
